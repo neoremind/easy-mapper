@@ -21,7 +21,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -31,8 +30,6 @@ import java.util.Map;
  */
 public class IntrospectorPropertyResolver extends PropertyResolver {
 
-    private boolean includeTransientFields;
-
     /**
      * Constructs a new IntrospectorPropertyResolver that processes transient fields
      * (backward compatibility)
@@ -41,20 +38,7 @@ public class IntrospectorPropertyResolver extends PropertyResolver {
      *                            properties
      */
     public IntrospectorPropertyResolver(boolean includePublicFields) {
-        this(includePublicFields, true);
-    }
-
-    /**
-     * Constructs a new IntrospectorPropertyResolver
-     *
-     * @param includePublicFields    whether properties for public fields should be processed as
-     *                               properties
-     * @param includeTransientFields whether properties (getters) annotated with <code>java.beans.Transient</code>
-     *                               should be processed
-     */
-    public IntrospectorPropertyResolver(boolean includePublicFields, boolean includeTransientFields) {
         super(includePublicFields);
-        this.includeTransientFields = includeTransientFields;
     }
 
     /**
@@ -82,9 +66,6 @@ public class IntrospectorPropertyResolver extends PropertyResolver {
             for (final PropertyDescriptor pd : descriptors) {
                 try {
                     Method readMethod = getReadMethod(pd, type);
-                    if (!includeTransientFields) {
-                        continue;
-                    }
                     Method writeMethod = getWriteMethod(pd, type, null);
 
                     Property property =

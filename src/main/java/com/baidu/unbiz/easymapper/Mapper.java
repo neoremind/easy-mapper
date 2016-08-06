@@ -16,10 +16,10 @@ public interface Mapper {
     /**
      * 执行mapping操作
      *
-     * @param sourceObject     源对象
-     * @param targetClass 目标类型
-     * @param <A>              源类型
-     * @param <B>              目标类型
+     * @param sourceObject 源对象
+     * @param targetClass  目标类型
+     * @param <A>          源类型
+     * @param <B>          目标类型
      *
      * @return 目标对象
      *
@@ -30,10 +30,10 @@ public interface Mapper {
     /**
      * 执行mapping操作
      *
-     * @param sourceObject      源对象
+     * @param sourceObject 源对象
      * @param targetObject 目标对象
-     * @param <A>               源类型
-     * @param <B>               目标类型
+     * @param <A>          源类型
+     * @param <B>          目标类型
      *
      * @return 目标对象
      *
@@ -64,5 +64,10 @@ public interface Mapper {
      * @return 类型映射关系
      */
     <A, B> ClassMap<A, B> registerClassMap(MapperKey key, ClassMapBuilder<A, B> builder);
+
+    /**
+     * 清理缓存
+     */
+    void clear();
 
 }

@@ -1,5 +1,8 @@
 package com.baidu.unbiz.easymapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
 import com.baidu.unbiz.easymapper.codegen.MappingCodeGenerator;
 import com.baidu.unbiz.easymapper.exception.MappingException;
@@ -16,6 +19,8 @@ import com.baidu.unbiz.easymapper.util.ReflectionUtil;
  * @author zhangxu
  */
 public class CopyByRefMapper implements Mapper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CopyByRefMapper.class);
 
     /**
      * 类型映射关系缓存
@@ -39,6 +44,18 @@ public class CopyByRefMapper implements Mapper {
         this.classMapCache = new Memoizer<MapperKey, ClassMap<Object, Object>>();
         this.mapperCache = new Memoizer<MapperKey, AtoBMapping<Object, Object>>();
         codeGenerator = new MappingCodeGenerator();
+    }
+
+    /**
+     * 清理
+     */
+    public void clear() {
+        if (this.classMapCache != null) {
+            this.classMapCache.clear();
+        }
+        if (this.mapperCache != null) {
+            this.mapperCache.clear();
+        }
     }
 
     /**
@@ -85,10 +102,10 @@ public class CopyByRefMapper implements Mapper {
     /**
      * 执行mapping操作
      *
-     * @param sourceObject     源对象
-     * @param targetClass 目标类型
-     * @param <A>              源类型
-     * @param <B>              目标类型
+     * @param sourceObject 源对象
+     * @param targetClass  目标类型
+     * @param <A>          源类型
+     * @param <B>          目标类型
      *
      * @return 目标对象
      *
@@ -102,10 +119,10 @@ public class CopyByRefMapper implements Mapper {
     /**
      * 执行mapping操作
      *
-     * @param sourceObject      源对象
+     * @param sourceObject 源对象
      * @param targetObject 目标对象
-     * @param <A>               源类型
-     * @param <B>               目标类型
+     * @param <A>          源类型
+     * @param <B>          目标类型
      *
      * @return 目标对象
      *
@@ -119,17 +136,21 @@ public class CopyByRefMapper implements Mapper {
     /**
      * 执行mapping操作
      *
-     * @param sourceObject     源对象
-     * @param destinationClass 目标类型
-     * @param <A>              源类型
-     * @param <B>              目标类型
+     * @param sourceObject 源对象
+     * @param targetHolder 目标对象holder
+     * @param <A>          源类型
+     * @param <B>          目标类型
      *
      * @return 目标对象
      */
-    private <A, B> B map(A sourceObject, TargetHolder<B> destinationHolder) {
+    private <A, B> B map(A sourceObject, TargetHolder<B> targetHolder) {
         try {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.info("Mapping {} to {}", TypeFactory.valueOf(sourceObject.getClass()),
+                        TypeFactory.valueOf(targetHolder.getTargetClass()));
+            }
             MapperKey key = new MapperKey(TypeFactory.valueOf(sourceObject.getClass()),
-                    TypeFactory.valueOf(destinationHolder.getTargetClass()));
+                    TypeFactory.valueOf(targetHolder.getTargetClass()));
             final ClassMap<A, B> classMap = (ClassMap<A, B>) classMapCache.get(key);
             if (classMap == null) {
                 throw new MappingException(
@@ -147,7 +168,7 @@ public class CopyByRefMapper implements Mapper {
                 throw new MappingException("Generating mapping code failed for " + classMap + ", this should not "
                         + "happen, probably the framework could not handle mapping correctly based on your bean");
             }
-            B b = destinationHolder.getB();
+            B b = targetHolder.getB();
             mapper.map(sourceObject, b);
             return b;
         } catch (InterruptedException e) {
@@ -188,12 +209,12 @@ public class CopyByRefMapper implements Mapper {
         /**
          * 构造方法
          *
-         * @param b                目标对象
-         * @param destinationClass 目标类型
+         * @param b           目标对象
+         * @param targetClass 目标类型
          */
-        public TargetHolder(B b, Class<B> destinationClass) {
+        public TargetHolder(B b, Class<B> targetClass) {
             this.b = b;
-            this.targetClass = destinationClass;
+            this.targetClass = targetClass;
         }
 
         /**

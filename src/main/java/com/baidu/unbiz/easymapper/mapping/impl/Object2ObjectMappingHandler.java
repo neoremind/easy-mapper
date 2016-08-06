@@ -29,7 +29,7 @@ public class Object2ObjectMappingHandler extends AbstractMappingHandler implemen
                                       SourceCodeContext code) {
         String mapNewObject = destination.assignIfPossible(
                 format("(%s)%s.map(%s, %s)", destination.typeName(), code.getMapper(), source,
-                        destination.type().toFullyQualifiedString() + ".class"));
+                        destination.type().getCanonicalName() + ".class"));
         String mapStmt = format(" %s { %s; }", destination.ifNull(), mapNewObject);
 
         String mapNull = destination.isAssignable() && fieldMap.isMapOnNull() ? format(" else {\n %s { %s; }\n}\n",

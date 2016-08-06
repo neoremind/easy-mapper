@@ -73,7 +73,7 @@ public class ClassMap<A, B> implements MappedTypePair<A, B> {
     }
 
     public String getMapperClassName() {
-        return "EasyMapper_" + getBTypeName() + "_" + getATypeName() + "_Mapper";
+        return "EasyMapper_" + getATypeName() + "_TO_" + getBTypeName() + "_Mapper";
     }
 
     @Override

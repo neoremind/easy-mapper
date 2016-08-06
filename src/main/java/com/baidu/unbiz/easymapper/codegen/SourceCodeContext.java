@@ -92,7 +92,7 @@ public class SourceCodeContext {
         sourceBuilder.append(LF);
         sourceBuilder.append(LF);
         sourceBuilder.append("public class ");
-        sourceBuilder.append(getUniqueClassName(this.classSimpleName));
+        sourceBuilder.append(this.classSimpleName);
         sourceBuilder.append(" extends GeneratedMapperBase {");
     }
 

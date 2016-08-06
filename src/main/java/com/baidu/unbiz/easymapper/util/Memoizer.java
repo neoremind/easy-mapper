@@ -42,6 +42,13 @@ public class Memoizer<K, V> {
     }
 
     /**
+     * 清除
+     */
+    public void clear() {
+        cache.clear();
+    }
+
+    /**
      * 计算并获取值
      *
      * @param arg key

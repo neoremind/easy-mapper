@@ -146,23 +146,6 @@ public class ClassMapBuilder<A, B> implements MappedTypePair {
     }
 
     /**
-     * 属性映射
-     *
-     * @param sourceField 源类型中的属性名称
-     * @param targetField 目标类型中的属性名称
-     * @param targetType  目标属性类型
-     * @param transformer 自定义属性转换器
-     * @param <D>         目标属性的Class
-     *
-     * @return ClassMapBuilder
-     */
-    public <D> ClassMapBuilder<A, B> field(String sourceField, String targetField, Class<D> targetType,
-                                           Transformer<A, D> transformer) {
-        putMappingExtension(sourceField, new MappingExtension(targetField, (Transformer<Object, Object>) transformer));
-        return this;
-    }
-
-    /**
      * 当源对象中的某个属性为空时，是否映射到目标对象
      *
      * @param mapOnNull 是否映射
