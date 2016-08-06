@@ -1,5 +1,6 @@
 package com.baidu.unbiz.easymapper;
 
+import com.baidu.unbiz.easymapper.exception.MappingException;
 import com.baidu.unbiz.easymapper.metadata.ClassMap;
 import com.baidu.unbiz.easymapper.metadata.MapperKey;
 
@@ -16,25 +17,29 @@ public interface Mapper {
      * 执行mapping操作
      *
      * @param sourceObject     源对象
-     * @param destinationClass 目标类型
+     * @param targetClass 目标类型
      * @param <A>              源类型
      * @param <B>              目标类型
      *
      * @return 目标对象
+     *
+     * @throws MappingException
      */
-    <A, B> B map(A sourceObject, Class<B> destinationClass);
+    <A, B> B map(A sourceObject, Class<B> targetClass) throws MappingException;
 
     /**
      * 执行mapping操作
      *
      * @param sourceObject      源对象
-     * @param destinationObject 目标对象
+     * @param targetObject 目标对象
      * @param <A>               源类型
      * @param <B>               目标类型
      *
      * @return 目标对象
+     *
+     * @throws MappingException
      */
-    <A, B> B map(A sourceObject, B destinationObject);
+    <A, B> B map(A sourceObject, B targetObject) throws MappingException;
 
     /**
      * 从源类型到目标类型做一个映射

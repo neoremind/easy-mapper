@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -257,6 +256,21 @@ public class ClassMapBuilder<A, B> implements MappedTypePair {
     public <A, B> B registerAndMap(A sourceObject, Class<B> targetClass) {
         register();
         return mapper.map(sourceObject, targetClass);
+    }
+
+    /**
+     * 先注册，然后直接调用映射
+     *
+     * @param sourceObject 源对象
+     * @param targetObject 目标对象
+     * @param <A>          源类型class
+     * @param <B>          目标类型class
+     *
+     * @return 映射后的目标对象
+     */
+    public <A, B> B registerAndMap(A sourceObject, B targetObject) {
+        register();
+        return mapper.map(sourceObject, targetObject);
     }
 
     /**

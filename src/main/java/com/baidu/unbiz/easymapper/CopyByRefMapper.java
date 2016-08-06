@@ -1,11 +1,11 @@
 package com.baidu.unbiz.easymapper;
 
+import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
 import com.baidu.unbiz.easymapper.codegen.MappingCodeGenerator;
 import com.baidu.unbiz.easymapper.exception.MappingException;
 import com.baidu.unbiz.easymapper.metadata.ClassMap;
-import com.baidu.unbiz.easymapper.metadata.TypeFactory;
-import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
 import com.baidu.unbiz.easymapper.metadata.MapperKey;
+import com.baidu.unbiz.easymapper.metadata.TypeFactory;
 import com.baidu.unbiz.easymapper.util.Computable;
 import com.baidu.unbiz.easymapper.util.Memoizer;
 import com.baidu.unbiz.easymapper.util.ReflectionUtil;
@@ -86,30 +86,34 @@ public class CopyByRefMapper implements Mapper {
      * 执行mapping操作
      *
      * @param sourceObject     源对象
-     * @param destinationClass 目标类型
+     * @param targetClass 目标类型
      * @param <A>              源类型
      * @param <B>              目标类型
      *
      * @return 目标对象
+     *
+     * @throws MappingException
      */
     @Override
-    public <A, B> B map(A sourceObject, Class<B> destinationClass) {
-        return map(sourceObject, new DestinationHolder<B>(null, destinationClass));
+    public <A, B> B map(A sourceObject, Class<B> targetClass) throws MappingException {
+        return map(sourceObject, new TargetHolder<B>(null, targetClass));
     }
 
     /**
      * 执行mapping操作
      *
      * @param sourceObject      源对象
-     * @param destinationObject 目标对象
+     * @param targetObject 目标对象
      * @param <A>               源类型
      * @param <B>               目标类型
      *
      * @return 目标对象
+     *
+     * @throws MappingException
      */
     @Override
-    public <A, B> B map(A sourceObject, B destinationObject) {
-        return map(sourceObject, new DestinationHolder<B>(destinationObject, (Class<B>) destinationObject.getClass()));
+    public <A, B> B map(A sourceObject, B targetObject) throws MappingException {
+        return map(sourceObject, new TargetHolder<B>(targetObject, (Class<B>) targetObject.getClass()));
     }
 
     /**
@@ -122,10 +126,10 @@ public class CopyByRefMapper implements Mapper {
      *
      * @return 目标对象
      */
-    private <A, B> B map(A sourceObject, DestinationHolder<B> destinationHolder) {
+    private <A, B> B map(A sourceObject, TargetHolder<B> destinationHolder) {
         try {
             MapperKey key = new MapperKey(TypeFactory.valueOf(sourceObject.getClass()),
-                    TypeFactory.valueOf(destinationHolder.getDestinationClass()));
+                    TypeFactory.valueOf(destinationHolder.getTargetClass()));
             final ClassMap<A, B> classMap = (ClassMap<A, B>) classMapCache.get(key);
             if (classMap == null) {
                 throw new MappingException(
@@ -169,7 +173,7 @@ public class CopyByRefMapper implements Mapper {
      *
      * @param <B>
      */
-    class DestinationHolder<B> {
+    class TargetHolder<B> {
 
         /**
          * 目标对象
@@ -179,7 +183,7 @@ public class CopyByRefMapper implements Mapper {
         /**
          * 目标类型
          */
-        Class<B> destinationClass;
+        Class<B> targetClass;
 
         /**
          * 构造方法
@@ -187,9 +191,9 @@ public class CopyByRefMapper implements Mapper {
          * @param b                目标对象
          * @param destinationClass 目标类型
          */
-        public DestinationHolder(B b, Class<B> destinationClass) {
+        public TargetHolder(B b, Class<B> destinationClass) {
             this.b = b;
-            this.destinationClass = destinationClass;
+            this.targetClass = destinationClass;
         }
 
         /**
@@ -199,13 +203,13 @@ public class CopyByRefMapper implements Mapper {
          */
         public B getB() {
             if (b == null) {
-                return ReflectionUtil.newInstance(destinationClass);
+                return ReflectionUtil.newInstance(targetClass);
             }
             return b;
         }
 
-        public Class<B> getDestinationClass() {
-            return destinationClass;
+        public Class<B> getTargetClass() {
+            return targetClass;
         }
     }
 }
