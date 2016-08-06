@@ -1,0 +1,5 @@
+com.baidu.unbiz.easymapper.mapping.impl.SpecifyTransformerMappingHandler
+com.baidu.unbiz.easymapper.mapping.impl.EqualTypeOrPrimitiveAndWrapperMappingHandler
+com.baidu.unbiz.easymapper.mapping.impl.AnyTypeToStringMappingHandler
+com.baidu.unbiz.easymapper.mapping.impl.CanBeAssignedMappingHandler
+com.baidu.unbiz.easymapper.mapping.impl.Object2ObjectMappingHandler
