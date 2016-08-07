@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/neoremind/easy-mapper.svg?branch=master)](https://travis-ci.org/neoremind/easy-mapper)
 [![Coverage Status](https://coveralls.io/repos/github/neoremind/easy-mapper/badge.svg?branch=master)](https://coveralls.io/github/neoremind/easy-mapper?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.baidu.unbiz/easy-mapper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.baidu.unbiz/easy-mapper)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Easy mapper is a simple, light-weight tool for Java bean mapping
