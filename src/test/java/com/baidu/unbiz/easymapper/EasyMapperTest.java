@@ -403,8 +403,8 @@ public class EasyMapperTest {
 
     @BeforeClass
     public static void init() {
-        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_SOURCE_FILE, "true");
-        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_CLASS_FILE, "true");
+        //System.setProperty(SystemPropertyUtil.ENABLE_WRITE_SOURCE_FILE, "true");
+        //System.setProperty(SystemPropertyUtil.ENABLE_WRITE_CLASS_FILE, "true");
         //System.setProperty(SystemPropertyUtil.WRITE_SOURCE_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
         //System.setProperty(SystemPropertyUtil.WRITE_CLASS_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
     }
