@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.hamcrest.Matchers;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
 import com.baidu.unbiz.easymapper.exception.MappingException;
 import com.baidu.unbiz.easymapper.transformer.Transformer;
+import com.baidu.unbiz.easymapper.util.SystemPropertyUtil;
 import com.baidu.unbiz.easymapper.vo.Address;
 import com.baidu.unbiz.easymapper.vo.Address2;
 import com.baidu.unbiz.easymapper.vo.Athlete;
@@ -26,6 +28,7 @@ import com.baidu.unbiz.easymapper.vo.Person4;
 import com.baidu.unbiz.easymapper.vo.Person5;
 import com.baidu.unbiz.easymapper.vo.Person6;
 import com.baidu.unbiz.easymapper.vo.Person7;
+import com.baidu.unbiz.easymapper.vo.Person8;
 import com.baidu.unbiz.easymapper.vo.PersonDto;
 import com.baidu.unbiz.easymapper.vo.PersonDto2;
 import com.baidu.unbiz.easymapper.vo.PersonDto3;
@@ -33,6 +36,7 @@ import com.baidu.unbiz.easymapper.vo.PersonDto4;
 import com.baidu.unbiz.easymapper.vo.PersonDto5;
 import com.baidu.unbiz.easymapper.vo.PersonDto6;
 import com.baidu.unbiz.easymapper.vo.PersonDto7;
+import com.baidu.unbiz.easymapper.vo.PersonDto8;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -380,6 +384,29 @@ public class EasyMapperTest {
         assertThat(dto.lastName, Matchers.is(p.lastName));
         assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
         assertThat(dto.salary, Matchers.is(p.salary));
+    }
+
+    @Test
+    public void testFinalStatic() throws Exception {
+        Person8 p = new Person8();
+        Person8.lastName = "Jason";
+        p.jobTitles = Lists.newArrayList("1", "2", "3");
+        PersonDto8 dto =
+                MapperFactory.getCopyByRefMapper().mapClass(Person8.class, PersonDto8.class)
+                        .registerAndMap(p, PersonDto8.class);
+        System.out.println(dto);
+        assertThat(dto.firstName, Matchers.is("hello"));
+        assertThat(dto.lastName, Matchers.is(p.lastName));
+        assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
+        assertThat(dto.salary, Matchers.is(200L));
+    }
+
+    @BeforeClass
+    public static void init() {
+        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_SOURCE_FILE, "true");
+        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_CLASS_FILE, "true");
+        //System.setProperty(SystemPropertyUtil.WRITE_SOURCE_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
+        //System.setProperty(SystemPropertyUtil.WRITE_CLASS_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
     }
 
     @After

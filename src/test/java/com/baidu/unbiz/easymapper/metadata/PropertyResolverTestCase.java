@@ -241,7 +241,7 @@ public class PropertyResolverTestCase {
     public void createTypeFromClass() {
         Type<?> type = TypeFactory.valueOf(Child.class.getGenericSuperclass());
         System.out.println(type);
-        Assert.assertEquals(Child.class, type.getRawType());
+        Assert.assertEquals(Parent.class, type.getRawType());
     }
 
     public static class Parent<T> {
