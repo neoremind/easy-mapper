@@ -50,19 +50,8 @@ public class TypeFactory {
      */
     private static <T> Type<T> intern(final Class<T> rawType, final java.lang.reflect.Type[] typeArguments,
                                       final Set<java.lang.reflect.Type> recursiveBounds) {
-        TypeKey key;
-        Type<?>[] convertedArguments = null;
-        WeakReference<TypeKey> wk = rawClassToTypeKeyCache.get(rawType);
-        if (wk != null) {
-            key = wk.get();
-        } else {
-            convertedArguments = TypeUtil.convertTypeArguments(rawType, typeArguments, recursiveBounds);
-            key = TypeKey.valueOf(rawType, convertedArguments);
-            if ((typeArguments == null || typeArguments.length == 0)
-                    && (recursiveBounds == null || recursiveBounds.size() == 0)) {
-                rawClassToTypeKeyCache.put(rawType, new WeakReference<TypeKey>(key));
-            }
-        }
+        Type<?>[] convertedArguments = TypeUtil.convertTypeArguments(rawType, typeArguments, recursiveBounds);
+        TypeKey key = TypeKey.valueOf(rawType, convertedArguments);
 
         WeakReference<Type<?>> mapped = typeCache.get(key);
         Type<T> typeResult = null;

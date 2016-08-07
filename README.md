@@ -6,7 +6,12 @@
 
 Easy mapper is a simple, light-weight tool for Java bean mapping
 
-
+```
++- org.slf4j:slf4j-api:jar:1.7.7:compile
++- org.slf4j:slf4j-log4j12:jar:1.7.7:compile
+|  \- log4j:log4j:jar:1.2.17:compile
++- org.javassist:javassist:jar:3.18.1-GA:compile
+```
 
 ```
 -------------------------------------

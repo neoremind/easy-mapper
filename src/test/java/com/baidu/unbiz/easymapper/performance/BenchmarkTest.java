@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.dozer.DozerBeanMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.baidu.unbiz.easymapper.Mapper;
@@ -19,6 +20,7 @@ import net.sf.cglib.beans.BeanCopier;
 /**
  * @author zhangxu
  */
+@Ignore
 public class BenchmarkTest {
 
     @Test
