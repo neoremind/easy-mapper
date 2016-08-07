@@ -2,6 +2,7 @@ package com.baidu.unbiz.easymapper;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -207,6 +208,11 @@ public class EasyMapperSample {
                         .register()
                         .map(p, PersonDto.class);
         System.out.println(dto);
+    }
+
+    @After
+    public void clear() {
+        MapperFactory.getCopyByRefMapper().clear();
     }
 
 }
