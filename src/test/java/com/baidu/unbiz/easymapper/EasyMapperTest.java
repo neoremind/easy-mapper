@@ -34,9 +34,11 @@ import com.baidu.unbiz.easymapper.vo.PersonDto2;
 import com.baidu.unbiz.easymapper.vo.PersonDto3;
 import com.baidu.unbiz.easymapper.vo.PersonDto4;
 import com.baidu.unbiz.easymapper.vo.PersonDto5;
+import com.baidu.unbiz.easymapper.vo.PersonDto5_1;
 import com.baidu.unbiz.easymapper.vo.PersonDto6;
 import com.baidu.unbiz.easymapper.vo.PersonDto7;
 import com.baidu.unbiz.easymapper.vo.PersonDto8;
+import com.baidu.unbiz.easymapper.vo.SubAddress;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -173,11 +175,29 @@ public class EasyMapperTest {
                     MapperFactory.getCopyByRefMapper().mapClass(Person5.class, PersonDto5.class).register()
                             .map(p, PersonDto5.class);
             System.out.println(dto);
+            assertThat(dto.address.getStreet(), Matchers.is(p.address.getStreet()));
+            assertThat(dto.address.getNo(), Matchers.is(p.address.getNo() + ""));
         } catch (MappingException e) {
             LOGGER.error(e.getMessage(), e);
             return;
         }
         fail();
+    }
+
+    @Test
+    public void testCanBeAssigned() throws Exception {
+        PersonDto5_1 p = new PersonDto5_1();
+        p.firstName = "neo";
+        p.lastName = "jason";
+        p.jobTitles = Lists.newArrayList("1", "2", "3");
+        p.salary = 1000L;
+        p.address = new SubAddress("beverly", 100);
+        Person5 dto =
+                MapperFactory.getCopyByRefMapper().mapClass(PersonDto5_1.class, Person5.class).register()
+                        .map(p, Person5.class);
+        System.out.println(dto);
+        assertThat(dto.address.getStreet(), Matchers.is(p.address.getStreet()));
+        assertThat(dto.address.getNo(), Matchers.is(p.address.getNo()));
     }
 
     @Test
