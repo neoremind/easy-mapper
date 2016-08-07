@@ -1,7 +1,6 @@
 package com.baidu.unbiz.easymapper.metadata;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
@@ -21,6 +20,9 @@ public class TypeFactory {
 
     private TypeFactory() {
     }
+
+    private static final ConcurrentHashMap<Class<?>, WeakReference<TypeKey>> rawClassToTypeKeyCache =
+            new ConcurrentHashMap<Class<?>, WeakReference<TypeKey>>();
 
     /**
      * Use a weak-valued concurrent map to avoid keeping static references to
@@ -48,9 +50,19 @@ public class TypeFactory {
      */
     private static <T> Type<T> intern(final Class<T> rawType, final java.lang.reflect.Type[] typeArguments,
                                       final Set<java.lang.reflect.Type> recursiveBounds) {
-
-        Type<?>[] convertedArguments = TypeUtil.convertTypeArguments(rawType, typeArguments, recursiveBounds);
-        TypeKey key = TypeKey.valueOf(rawType, convertedArguments);
+        TypeKey key;
+        Type<?>[] convertedArguments = null;
+        WeakReference<TypeKey> wk = rawClassToTypeKeyCache.get(rawType);
+        if (wk != null) {
+            key = wk.get();
+        } else {
+            convertedArguments = TypeUtil.convertTypeArguments(rawType, typeArguments, recursiveBounds);
+            key = TypeKey.valueOf(rawType, convertedArguments);
+            if ((typeArguments == null || typeArguments.length == 0)
+                    && (recursiveBounds == null || recursiveBounds.size() == 0)) {
+                rawClassToTypeKeyCache.put(rawType, new WeakReference<TypeKey>(key));
+            }
+        }
 
         WeakReference<Type<?>> mapped = typeCache.get(key);
         Type<T> typeResult = null;

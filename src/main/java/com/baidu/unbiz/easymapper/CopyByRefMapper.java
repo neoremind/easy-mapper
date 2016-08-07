@@ -113,7 +113,7 @@ public class CopyByRefMapper implements Mapper {
      */
     @Override
     public <A, B> B map(A sourceObject, Class<B> targetClass) throws MappingException {
-        return map(sourceObject, new TargetHolder<B>(null, targetClass));
+        return map(sourceObject, null, targetClass);
     }
 
     /**
@@ -130,7 +130,7 @@ public class CopyByRefMapper implements Mapper {
      */
     @Override
     public <A, B> B map(A sourceObject, B targetObject) throws MappingException {
-        return map(sourceObject, new TargetHolder<B>(targetObject, (Class<B>) targetObject.getClass()));
+        return map(sourceObject, targetObject, (Class<B>) targetObject.getClass());
     }
 
     /**
@@ -143,14 +143,14 @@ public class CopyByRefMapper implements Mapper {
      *
      * @return 目标对象
      */
-    private <A, B> B map(A sourceObject, TargetHolder<B> targetHolder) {
+    private <A, B> B map(A sourceObject, B b, Class<B> targetClass) {
         try {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.info("Mapping {} to {}", TypeFactory.valueOf(sourceObject.getClass()),
-                        TypeFactory.valueOf(targetHolder.getTargetClass()));
+                LOGGER.debug("Mapping {} to {}", TypeFactory.valueOf(sourceObject.getClass()),
+                        TypeFactory.valueOf(targetClass));
             }
             MapperKey key = new MapperKey(TypeFactory.valueOf(sourceObject.getClass()),
-                    TypeFactory.valueOf(targetHolder.getTargetClass()));
+                    TypeFactory.valueOf(targetClass));
             final ClassMap<A, B> classMap = (ClassMap<A, B>) classMapCache.get(key);
             if (classMap == null) {
                 throw new MappingException(
@@ -168,7 +168,9 @@ public class CopyByRefMapper implements Mapper {
                 throw new MappingException("Generating mapping code failed for " + classMap + ", this should not "
                         + "happen, probably the framework could not handle mapping correctly based on your bean");
             }
-            B b = targetHolder.getB();
+            if (b == null) {
+                b = ReflectionUtil.newInstance(targetClass);
+            }
             mapper.map(sourceObject, b);
             return b;
         } catch (InterruptedException e) {
@@ -189,48 +191,4 @@ public class CopyByRefMapper implements Mapper {
         return this;
     }
 
-    /**
-     * 目标对象holder
-     *
-     * @param <B>
-     */
-    class TargetHolder<B> {
-
-        /**
-         * 目标对象
-         */
-        B b;
-
-        /**
-         * 目标类型
-         */
-        Class<B> targetClass;
-
-        /**
-         * 构造方法
-         *
-         * @param b           目标对象
-         * @param targetClass 目标类型
-         */
-        public TargetHolder(B b, Class<B> targetClass) {
-            this.b = b;
-            this.targetClass = targetClass;
-        }
-
-        /**
-         * 获取目标对象，如果为空则用反射新建一个
-         *
-         * @return 目标对象
-         */
-        public B getB() {
-            if (b == null) {
-                return ReflectionUtil.newInstance(targetClass);
-            }
-            return b;
-        }
-
-        public Class<B> getTargetClass() {
-            return targetClass;
-        }
-    }
 }
