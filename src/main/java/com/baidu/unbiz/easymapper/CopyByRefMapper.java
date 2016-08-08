@@ -137,7 +137,8 @@ public class CopyByRefMapper implements Mapper {
      * 执行mapping操作
      *
      * @param sourceObject 源对象
-     * @param targetHolder 目标对象holder
+     * @param b            目标对象，可为空，为空则会构造一个
+     * @param targetClass  目标类型
      * @param <A>          源类型
      * @param <B>          目标类型
      *
