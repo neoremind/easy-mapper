@@ -198,23 +198,23 @@ Specify the following args:
 ```
 
 ##4. Benchmark
-Based on Oracal Hotspot JVM
+Based on Oracal Hotspot JVM:
 ```
 java version "1.8.0_51"
 Java(TM) SE Runtime Environment (build 1.8.0_51-b16)
 Java HotSpot(TM) 64-Bit Server VM (build 25.51-b03, mixed mode)
 ```
-JVM args
+JVM args:
 ```
 -Xmx512m -Xms512m -XX:MetaspaceSize=256m
 ```
-Hardware configuration
+Hardware configuration:
 ```
 CPU: Intel(R) Core(TM) i5-4278U CPU @ 2.60GHz
 MEM: 8G
 ```
 
-Please refer to testing source code.
+Please refer to [testing source code](https://github.com/neoremind/easy-mapper/blob/master/src/test/java/com/baidu/unbiz/easymapper/performance/BenchmarkTest.java).
 ```
 -------------------------------------
 | Create object number:   10000      |
@@ -258,6 +258,7 @@ Please refer to testing source code.
 ```
 
 Conclusion:
+
 Easy-mapper is way faster than traditional framework like Apache BeanUtils, PropertyUtils and dozer but cannot beat Cglib Beancopier which manipulating byte code using ASM directly. 
 
 For Spring BeanUtils, when invocation number exceeds certain threshold, Spring BeanUtils is faster than Easy-mapper. That is because Spring BeanUtils is so simple that it just execute Method.invoke(..), and this reflection work can be improved by JIT compiler at runtime and does not invoke native method. 
@@ -296,6 +297,7 @@ List<PersonDto> personDtoList = personList.stream().map(p -> MapperFactory.getCo
 
 
 ###5.4 With Scala
+```
 object EasyMapperTest {
  
   def main(args: Array[String]) {
@@ -308,8 +310,8 @@ object EasyMapperTest {
     val personDtoList = personList.map(p => MapperFactory.getCopyByRefMapper.map(p, classOf[PersonDto]))
     personDtoList.foreach(println)
   }
- 
 }
+```
 
 ##6. Acknowledgment
 The development of easy-mapper is inspired by Orika. Easy-mapper with Apache2.0 Open Source License retains all copyright, trademark, author’s information from Orika.
