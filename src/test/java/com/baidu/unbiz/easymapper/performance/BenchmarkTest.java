@@ -18,6 +18,19 @@ import com.google.common.collect.Lists;
 import net.sf.cglib.beans.BeanCopier;
 
 /**
+ * 建议测试基础参数，基于JVM 8版本。
+ * <pre>
+ *     -Xmx512m -Xms512m -XX:MetaspaceSize=256m
+ * </pre>
+ * 使用如下参数可以看是否被JIT优化：
+ * <pre>
+ *     -XX:+PrintCompilation
+ * </pre>
+ * 使用如下参数可以看编译后的机器码：
+ * <pre>
+ *     -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -XX:CompileCommand=print,*Test.testEasyMapper
+ * </pre>
+ *
  * @author zhangxu
  */
 @Ignore
@@ -52,6 +65,8 @@ public class BenchmarkTest {
         testSpringBeanUtils(1, "Spring BeanUtils");
         testDozer(1, "Dozer");
 
+        profilerList.add(testGetSet(invokeNum, "Pure get/set"));
+        //hang(1);
         profilerList.add(testEasyMapper(invokeNum, "Easy mapper"));
         //hang(1);
         profilerList.add(testBeanCopier(invokeNum, "Cglib beancopier"));
@@ -74,6 +89,22 @@ public class BenchmarkTest {
 
         }
         System.out.println("-------------------------------------");
+    }
+
+    public Profiler testGetSet(int invokeNum, String frameworkName) {
+        BeanCopier b = BeanCopier.create(Person7.class, PersonDto.class, false);
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < invokeNum; i++) {
+            Person7 p = getPerson();
+            PersonDto dto = new PersonDto();
+            dto.setFirstName(p.getFirstName());
+            dto.setLastName(p.getLastName());
+            dto.setJobTitles(p.getJobTitles());
+            dto.setSalary(p.getSalary());
+            //System.out.println(dto);
+        }
+        return Profiler.apply(System.currentTimeMillis(), start)
+                .setFrameworkName(frameworkName);
     }
 
     public Profiler testBeanCopier(int invokeNum, String frameworkName) {

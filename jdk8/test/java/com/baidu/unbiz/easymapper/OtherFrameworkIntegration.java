@@ -2,25 +2,31 @@ package com.baidu.unbiz.easymapper;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 
 import com.baidu.unbiz.easymapper.pojo.Address;
 import com.baidu.unbiz.easymapper.pojo.Address2;
 import com.baidu.unbiz.easymapper.pojo.Person;
 import com.baidu.unbiz.easymapper.pojo.PersonDto;
-import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-
-import fj.F;
-import fj.data.TreeMap;
 
 /**
  * @author zhangxu
  */
 public class OtherFrameworkIntegration {
+
+    @Test
+    public void testJava8Stream() throws Exception {
+        MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
+        MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
+        List<Person> personList = getPersonList();
+        List<PersonDto> personDtoList = personList.stream().map(p -> MapperFactory.getCopyByRefMapper().map(p,
+                PersonDto.class)).collect(Collectors.toList());
+        System.out.println(personDtoList);
+    }
 
     @Test
     public void testGuavaCollections2() throws Exception {

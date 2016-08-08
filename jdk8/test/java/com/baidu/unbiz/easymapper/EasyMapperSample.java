@@ -188,7 +188,7 @@ public class EasyMapperSample {
         p.setAddress(new Address("beverly hill", 10086));
         PersonDto dto =
                 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class)
-                        .customMapping((s, d) -> d.setLastName(s.getLastName().toUpperCase()))
+                        .customMapping((a, b) -> b.setLastName(a.getLastName().toUpperCase()))
                         .register()
                         .map(p, PersonDto.class);
         System.out.println(dto);
