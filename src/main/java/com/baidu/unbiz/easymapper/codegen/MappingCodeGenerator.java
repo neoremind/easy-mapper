@@ -69,7 +69,7 @@ public final class MappingCodeGenerator {
             GeneratedAtoBMappingBase a2bMapping =
                     (GeneratedAtoBMappingBase) byteCodeManipulator.compileClass(sourceCodeContext).newInstance();
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.info("Mapping code is\n{}", sourceCodeContext.toSourceFile());
+                LOGGER.debug("Mapping code is\n{}", sourceCodeContext.toSourceFile());
             }
             a2bMapping.setTransformers(sourceCodeContext.getTransformers());
             a2bMapping.setMapper(mapper);
