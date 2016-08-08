@@ -12,7 +12,7 @@ Here, easy-mapper uses by-reference field mapping strategy most of the time exce
 
 For performance test result, please refer to the benchmark section.
 
-中文手册[请点这里]()。
+中文手册[请点这里](http://neoremind.com/2016/08/easy-mapper-%E4%B8%80%E4%B8%AA%E7%81%B5%E6%B4%BB%E5%8F%AF%E6%89%A9%E5%B1%95%E7%9A%84%E9%AB%98%E6%80%A7%E8%83%BDbean-mapping%E7%B1%BB%E5%BA%93/)。
 
 ##1. Easy-mapper in a nutshell
 ###1.1 Where to get easy mapper
