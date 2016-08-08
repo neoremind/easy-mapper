@@ -133,7 +133,7 @@ PersonDto dto = MapperFactory.getCopyByRefMapper().mapClass(Person.class, Person
                     .map(p, PersonDto.class);
 ```
 
-Type infer
+Type inference:
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class)
                     .field("firstName", "firstName", String.class, String.class, s -> s.toLowerCase())
@@ -162,7 +162,7 @@ PersonDto dto = MapperFactory.getCopyByRefMapper().mapClass(Person.class, Person
                     .mapOnNull(true)
                     .register()
                     .map(p, PersonDto.class);
-``
+```
 
 ###2.8 Cascade mapping
 If `Person` has-a `Address`, `Address` mapping should be done beforehand.
