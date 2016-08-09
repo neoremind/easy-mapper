@@ -189,7 +189,22 @@ Specify the following args:
 -Dcom.baidu.unbiz.easymapper.writeClassFileAbsolutePath="..."
 ```
 
-##3. Dependencies
+##3. Mapping rules
+Rules prioritizes as below:
+1.	Custom transformer goes with highest priority.
+2.	Field type is the same, copy by reference. For primitive and wrapper type, equal operator is used for assigning.
+3.	If target field is String but source is not, assign target with source.toString().
+4.	If target field type can be assigned from source field type, then copy by reference.
+5.	Any other cases, use object graph or so called cascade mapping to map.
+
+At last, if none of the mapping handlers work, there will end up with the following exception:
+```
+com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException: No appropriate mapping strategy found for FieldMap[jobTitles(List<string>)-->jobTitles(List<integer>)]
+...
+com.baidu.unbiz.easymapper.exception.MappingException: Generating mapping code failed for ClassMap([A]:Person6, [B]:PersonDto6), this should not happen, probably the framework could not handle mapping correctly based on your bean.
+```
+
+##4. Dependencies
 ```
 +- org.slf4j:slf4j-api:jar:1.7.7:compile
 +- org.slf4j:slf4j-log4j12:jar:1.7.7:compile
@@ -197,7 +212,7 @@ Specify the following args:
 +- org.javassist:javassist:jar:3.18.1-GA:compile
 ```
 
-##4. Benchmark
+##5. Benchmark
 Based on Oracal Hotspot JVM:
 ```
 java version "1.8.0_51"
@@ -265,8 +280,8 @@ For Spring BeanUtils, when invocation number exceeds certain threshold, Spring B
 
 By thinking of the benefits that easy-mapper brings to you, this tradeoff can be accepted.
 
-##5. Working together with High-order function
-###5.1 With guava
+##6. Working together with High-order function
+###6.1 With guava
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
@@ -276,7 +291,7 @@ Collection<PersonDto> personDtoList = Collections2.transform(personList,
 System.out.println(personDtoList);
 ```
 
-###5.2 With functional java
+###6.2 With functional java
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
@@ -286,7 +301,7 @@ fj.data.List<PersonDto> personDtoList = fj.data.List.fromIterator(personList.ite
 personDtoList.forEach(e -> System.out.println(e));
 ```
 
-###5.3 With Java8 stream
+###6.3 With Java8 stream
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
@@ -296,7 +311,7 @@ List<PersonDto> personDtoList = personList.stream().map(p -> MapperFactory.getCo
 ```
 
 
-###5.4 With Scala
+###6.4 With Scala
 ```
 object EasyMapperTest {
  
@@ -313,5 +328,5 @@ object EasyMapperTest {
 }
 ```
 
-##6. Acknowledgment
+##7. Acknowledgment
 The development of easy-mapper is inspired by Orika. Easy-mapper with Apache2.0 Open Source License retains all copyright, trademark, author’s information from Orika.
