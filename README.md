@@ -4,11 +4,11 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.baidu.unbiz/easy-mapper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.baidu.unbiz/easy-mapper)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Easy-mapper is a simple, light-weighted, high performance java bean mapping framework. By leveraging Javassist, easy mapper can generate mapping byte-code at runtime and load them into JVM so that classes can be reused for later mapping invocations. 
+Easy-mapper is a simple, light-weighted, high-performance java bean mapping framework. By leveraging Javassist, easy mapper can generate mapping byte-code at runtime and load them into JVM for later invocations to reduce some of the overhead.
 
-Easy-mapper not only provides a relatively high-performance mapping solution, but also enables the caller to do mapping in a more flexible and extensible way. One can use fluent interface style API and Java8 lambda to customize the mapping strategy.
+Easy-mapper not only provides a relatively high-performance mapping solution, but also enables the caller to do mapping in a more flexible and extensible way. Fluent interface style API and Java8 lambda API, these modern techniques can be fully used to customize your own mapping strategy.
 
-Here, easy-mapper uses by-reference field mapping strategy most of the time except for some immutable types like primitive, wrapper and String. When you don’t need to copy and clone field, by-reference mapping is capable to process your business logic and avoid the overhead of performance loss. On the other hand, easy-mapper respects immutability and do not mean to offense, just provide an alternative solution.
+Here, easy-mapper uses by-reference field mapping strategy most of the time except for some immutable types like primitive, wrapper, String and BigDecimal, etc. When you don’t need to copy and clone field, by-reference mapping is capable to process your business logic and avoid the overhead of performance loss. On the other hand, easy-mapper respects immutability and do not mean to offense, just provide an alternative solution.
 
 For performance test result, please refer to the benchmark section.
 
@@ -165,7 +165,7 @@ PersonDto dto = MapperFactory.getCopyByRefMapper().mapClass(Person.class, Person
 ```
 
 ###2.8 Cascade mapping
-If `Person` has-a `Address`, `Address` mapping should be done beforehand.
+Easy-mapper can map recursively. If `Person` has-a `Address`, `Address` mapping should be done beforehand.
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 Person p = getPerson(); 
