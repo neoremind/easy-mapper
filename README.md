@@ -191,10 +191,15 @@ Specify the following args:
 
 ##3. Mapping rules
 Rules prioritizes as below:
+
 1.	Custom transformer goes with highest priority.
+
 2.	Field type is the same, copy by reference. For primitive and wrapper type, equal operator is used for assigning.
+
 3.	If target field is String but source is not, assign target with source.toString().
+
 4.	If target field type can be assigned from source field type, then copy by reference.
+
 5.	Any other cases, use object graph or so called cascade mapping to map.
 
 At last, if none of the mapping handlers work, there will end up with the following exception:
