@@ -43,7 +43,7 @@ public class BenchmarkTest {
 
     @Test
     public void test10k() {
-        testMapping(10000);
+        testMapping(2);
     }
 
     @Test
@@ -58,26 +58,26 @@ public class BenchmarkTest {
 
     public void testMapping(int invokeNum) {
         List<Profiler> profilerList = Lists.newArrayList();
-        testEasyMapper(1, "Easy mapper");
-        testBeanCopier(1, "Cglib bean-copier");
-        testBeanUtils(1, "BeanUtils");
-        testPropertyUtils(1, "PropertyUtils");
-        testSpringBeanUtils(1, "Spring BeanUtils");
-        testDozer(1, "Dozer");
-
-        profilerList.add(testGetSet(invokeNum, "Pure get/set"));
-        //hang(1);
-        profilerList.add(testEasyMapper(invokeNum, "Easy mapper"));
-        //hang(1);
-        profilerList.add(testBeanCopier(invokeNum, "Cglib beancopier"));
-        //hang(1);
-        profilerList.add(testBeanUtils(invokeNum, "BeanUtils"));
-        //hang(1);
-        profilerList.add(testPropertyUtils(invokeNum, "PropertyUtils"));
+//        testEasyMapper(1, "Easy mapper");
+//        testBeanCopier(1, "Cglib bean-copier");
+//        testBeanUtils(1, "BeanUtils");
+//        testPropertyUtils(1, "PropertyUtils");
+//        testSpringBeanUtils(1, "Spring BeanUtils");
+//        testDozer(1, "Dozer");
+//
+//        profilerList.add(testGetSet(invokeNum, "Pure get/set"));
+//        //hang(1);
+//        profilerList.add(testEasyMapper(invokeNum, "Easy mapper"));
+//        //hang(1);
+//        profilerList.add(testBeanCopier(invokeNum, "Cglib beancopier"));
+//        //hang(1);
+//        profilerList.add(testBeanUtils(invokeNum, "BeanUtils"));
+//        //hang(1);
+//        profilerList.add(testPropertyUtils(invokeNum, "PropertyUtils"));
         //hang(1);
         profilerList.add(testSpringBeanUtils(invokeNum, "Spring BeanUtils"));
         //hang(1);
-        profilerList.add(testDozer(invokeNum, "Dozer"));
+//        profilerList.add(testDozer(invokeNum, "Dozer"));
 
         System.out.println("-------------------------------------");
         System.out.println(String.format("| Create object number:%8d      |", invokeNum));

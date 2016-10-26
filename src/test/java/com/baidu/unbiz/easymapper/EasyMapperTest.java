@@ -67,6 +67,32 @@ public class EasyMapperTest {
     }
 
     @Test
+    public void testBidirection() throws Exception {
+        Person p = new Person();
+        p.firstName = "neo";
+        p.lastName = "jason";
+        p.jobTitles = Lists.newArrayList("1", "2", "3");
+        p.salary = 1000L;
+        PersonDto dto =
+                MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register()
+                        .map(p, PersonDto.class);
+        System.out.println(dto);
+        assertThat(dto.firstName, Matchers.is(p.firstName));
+        assertThat(dto.lastName, Matchers.is(p.lastName));
+        assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
+        assertThat(dto.salary, Matchers.is(p.salary));
+
+        Person p2 =
+                MapperFactory.getCopyByRefMapper().mapClass(PersonDto.class, Person.class).register()
+                        .map(dto, Person.class);
+        System.out.println(p2);
+        assertThat(p2.firstName, Matchers.is(p.firstName));
+        assertThat(p2.lastName, Matchers.is(p.lastName));
+        assertThat(p2.jobTitles, Matchers.is(p.jobTitles));
+        assertThat(p2.salary, Matchers.is(p.salary));
+    }
+
+    @Test
     public void testPrimitiveAndWrapper() throws Exception {
         Person2 p = new Person2();
         p.firstName = "neo";
@@ -423,10 +449,10 @@ public class EasyMapperTest {
 
     @BeforeClass
     public static void init() {
-        //System.setProperty(SystemPropertyUtil.ENABLE_WRITE_SOURCE_FILE, "true");
-        //System.setProperty(SystemPropertyUtil.ENABLE_WRITE_CLASS_FILE, "true");
-        //System.setProperty(SystemPropertyUtil.WRITE_SOURCE_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
-        //System.setProperty(SystemPropertyUtil.WRITE_CLASS_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
+//        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_SOURCE_FILE, "true");
+//        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_CLASS_FILE, "true");
+//        System.setProperty(SystemPropertyUtil.WRITE_SOURCE_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
+//        System.setProperty(SystemPropertyUtil.WRITE_CLASS_FILE_ABSOLUTE_PATH, "/Users/baidu/work/easymapper");
     }
 
     @After

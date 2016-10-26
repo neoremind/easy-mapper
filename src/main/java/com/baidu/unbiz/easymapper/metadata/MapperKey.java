@@ -49,8 +49,7 @@ public class MapperKey implements MappedTypePair<Object, Object> {
 
         final MapperKey mapperKey = (MapperKey) o;
 
-        return (equals(aType, mapperKey.aType) && equals(bType, mapperKey.bType))
-                || (equals(aType, mapperKey.bType) && equals(bType, mapperKey.aType));
+        return (equals(aType, mapperKey.aType) && equals(bType, mapperKey.bType));
 
     }
 
