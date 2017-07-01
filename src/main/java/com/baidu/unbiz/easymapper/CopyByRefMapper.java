@@ -166,6 +166,7 @@ public class CopyByRefMapper implements Mapper {
                                 }
                             });
             if (mapper == MappingCodeGenerator.ABSENT_MAPPING) {
+                mapperCache.remove(key);
                 throw new MappingException("Generating mapping code failed for " + classMap + ", this should not "
                         + "happen, probably the framework could not handle mapping correctly based on your bean");
             }
