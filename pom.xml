@@ -5,7 +5,7 @@
 
     <groupId>com.baidu.unbiz</groupId>
     <artifactId>easy-mapper</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <name>easy-mapper</name>
     <description>Easy mapper is a simple, light-weight tool for Java bean mapping</description>
