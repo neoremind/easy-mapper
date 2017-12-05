@@ -6,6 +6,8 @@ import static org.junit.Assert.fail;
 import java.util.List;
 import java.util.Map;
 
+import com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException;
+import com.baidu.unbiz.easymapper.vo.*;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -16,29 +18,6 @@ import org.slf4j.LoggerFactory;
 import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
 import com.baidu.unbiz.easymapper.exception.MappingException;
 import com.baidu.unbiz.easymapper.transformer.Transformer;
-import com.baidu.unbiz.easymapper.util.SystemPropertyUtil;
-import com.baidu.unbiz.easymapper.vo.Address;
-import com.baidu.unbiz.easymapper.vo.Address2;
-import com.baidu.unbiz.easymapper.vo.Athlete;
-import com.baidu.unbiz.easymapper.vo.Family;
-import com.baidu.unbiz.easymapper.vo.Person;
-import com.baidu.unbiz.easymapper.vo.Person2;
-import com.baidu.unbiz.easymapper.vo.Person3;
-import com.baidu.unbiz.easymapper.vo.Person4;
-import com.baidu.unbiz.easymapper.vo.Person5;
-import com.baidu.unbiz.easymapper.vo.Person6;
-import com.baidu.unbiz.easymapper.vo.Person7;
-import com.baidu.unbiz.easymapper.vo.Person8;
-import com.baidu.unbiz.easymapper.vo.PersonDto;
-import com.baidu.unbiz.easymapper.vo.PersonDto2;
-import com.baidu.unbiz.easymapper.vo.PersonDto3;
-import com.baidu.unbiz.easymapper.vo.PersonDto4;
-import com.baidu.unbiz.easymapper.vo.PersonDto5;
-import com.baidu.unbiz.easymapper.vo.PersonDto5_1;
-import com.baidu.unbiz.easymapper.vo.PersonDto6;
-import com.baidu.unbiz.easymapper.vo.PersonDto7;
-import com.baidu.unbiz.easymapper.vo.PersonDto8;
-import com.baidu.unbiz.easymapper.vo.SubAddress;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -60,6 +39,7 @@ public class EasyMapperTest {
                 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register()
                         .map(p, PersonDto.class);
         System.out.println(dto);
+        System.out.println(dto.myType);
         assertThat(dto.firstName, Matchers.is(p.firstName));
         assertThat(dto.lastName, Matchers.is(p.lastName));
         assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
@@ -247,7 +227,7 @@ public class EasyMapperTest {
     }
 
     @Test
-    public void testField() throws Exception {
+    public void testExplicitFieldMapping() throws Exception {
         Person7 p = new Person7();
         p.setFirstName("neo");
         p.setJobTitles(Lists.newArrayList("1", "2", "3"));
@@ -267,7 +247,7 @@ public class EasyMapperTest {
     }
 
     @Test
-    public void testExclude() throws Exception {
+    public void testExcludeFieldMapping() throws Exception {
         Person7 p = new Person7();
         p.setFirstName("neo");
         p.setLastName("Jason");
@@ -362,8 +342,42 @@ public class EasyMapperTest {
         assertThat(dto.salary, Matchers.is(p.salary));
     }
 
+    /**
+     * [ERROR]	2017-12-05 20:19:37,964	[main]	easymapper.codegen.MappingCodeGenerator	(MappingCodeGenerator
+     * .java:79)	-Generating mapping code with error: No appropriate mapping strategy found for FieldMap[entityList
+     * (List<Entity1>)-->entityList(List<Entity2>)]
+     * com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException: No appropriate mapping strategy found for
+     * FieldMap[entityList(List<Entity1>)-->entityList(List<Entity2>)]
+     * <p>
+     * 目前不支持
+     */
+    @Test(expected = MappingException.class)
+    public void testCustomMappingAndTransformerWrapCollectionType() throws Exception {
+        MapperFactory.getCopyByRefMapper().mapClass(Entity1.class, Entity2.class)
+                .register();
+        MapperFactory.getCopyByRefMapper().mapClass(Entity1Wrapper.class, Entity2Wrapper.class)
+                .register();
+
+        Person10 p = new Person10();
+        p.firstName = "neo";
+        p.lastName = "Jason2";
+        p.jobTitles = Lists.newArrayList("1", "2", "3");
+        p.salary = 1000L;
+        p.entity = new Entity1Wrapper(Lists.newArrayList(Entity1.of("xu")));
+
+        PersonDto10 dto = new PersonDto10();
+        MapperFactory.getCopyByRefMapper().mapClass(Person10.class, PersonDto10.class)
+                .register()
+                .map(p, dto);
+        System.out.println(dto);
+        assertThat(dto.firstName, Matchers.is(p.firstName));
+        assertThat(dto.lastName, Matchers.is(p.lastName.toUpperCase()));
+        assertThat(dto.jobTitles.size(), Matchers.is(4));
+        assertThat(dto.salary, Matchers.is(p.salary));
+    }
+
     @Test
-    public void testTransformer1() throws Exception {
+    public void testNameNotMatchTransformer() throws Exception {
         Person7 p = new Person7();
         p.setFirstName("neo");
         p.setLastName("Jason");
@@ -387,7 +401,7 @@ public class EasyMapperTest {
     }
 
     @Test
-    public void testTransformer2() throws Exception {
+    public void testNameNotMatchTransformerNegative() throws Exception {
         try {
             Person7 p = new Person7();
             p.setFirstName("neo");
@@ -445,6 +459,26 @@ public class EasyMapperTest {
         assertThat(dto.lastName, Matchers.is(p.lastName));
         assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
         assertThat(dto.salary, Matchers.is(200L));
+    }
+
+    @Test
+    public void testEnum() throws Exception {
+        Person9 p = new Person9();
+        p.firstName = "neo";
+        p.lastName = "jason";
+        p.jobTitles = Lists.newArrayList("1", "2", "3");
+        p.salary = 1000L;
+        p.myType = MyEnumType.Mon;
+        PersonDto9 dto =
+                MapperFactory.getCopyByRefMapper().mapClass(Person9.class, PersonDto9.class).register()
+                        .map(p, PersonDto9.class);
+        System.out.println(dto);
+        System.out.println(dto.myType);
+        assertThat(dto.firstName, Matchers.is(p.firstName));
+        assertThat(dto.lastName, Matchers.is(p.lastName));
+        assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
+        assertThat(dto.salary, Matchers.is(p.salary));
+        assertThat(dto.myType, Matchers.is(MyEnumType.Mon));
     }
 
     @BeforeClass

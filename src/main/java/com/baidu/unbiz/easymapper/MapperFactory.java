@@ -10,7 +10,9 @@ public class MapperFactory {
     /**
      * 默认的Mapper
      */
-    private static Mapper DEFAULT_MAPPER;
+    private static volatile Mapper DEFAULT_MAPPER;
+
+    private static final Object LOCK = new Object();
 
     /**
      * 获取拷贝引用的Mapper
@@ -19,7 +21,7 @@ public class MapperFactory {
      */
     public static Mapper getCopyByRefMapper() {
         if (DEFAULT_MAPPER == null) {
-            synchronized(MapperFactory.class) {
+            synchronized(LOCK) {
                 if (DEFAULT_MAPPER == null) {
                     DEFAULT_MAPPER = new CopyByRefMapper();
                 }

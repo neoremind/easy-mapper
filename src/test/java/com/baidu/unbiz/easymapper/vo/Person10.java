@@ -1,19 +1,19 @@
 package com.baidu.unbiz.easymapper.vo;
 
-import java.util.List;
-
 import com.google.common.base.MoreObjects;
+
+import java.util.List;
 
 /**
  * @author zhangxu
  */
-public class PersonDto {
+public class Person10 {
 
     public String firstName;
     public String lastName;
     public List<String> jobTitles;
     public long salary;
-    public MyEnumType myType;
+    public Entity1Wrapper entity;
 
     @Override
     public String toString() {
@@ -22,6 +22,7 @@ public class PersonDto {
                 .add("lastName", lastName)
                 .add("jobTitles", jobTitles)
                 .add("salary", salary)
+                .add("entity", entity)
                 .toString();
     }
 
@@ -55,5 +56,13 @@ public class PersonDto {
 
     public void setSalary(long salary) {
         this.salary = salary;
+    }
+
+    public Entity1Wrapper getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity1Wrapper entity) {
+        this.entity = entity;
     }
 }

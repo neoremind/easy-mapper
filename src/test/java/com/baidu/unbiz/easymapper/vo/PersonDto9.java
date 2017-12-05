@@ -1,13 +1,13 @@
 package com.baidu.unbiz.easymapper.vo;
 
-import java.util.List;
-
 import com.google.common.base.MoreObjects;
+
+import java.util.List;
 
 /**
  * @author zhangxu
  */
-public class PersonDto {
+public class PersonDto9 {
 
     public String firstName;
     public String lastName;
