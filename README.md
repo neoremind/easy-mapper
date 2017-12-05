@@ -21,7 +21,7 @@ Maven:
 <dependency>
     <groupId>com.baidu.unbiz</groupId>
     <artifactId>easy-mapper</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 Gradle:
@@ -209,7 +209,30 @@ com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException: No appropri
 com.baidu.unbiz.easymapper.exception.MappingException: Generating mapping code failed for ClassMap([A]:Person6, [B]:PersonDto6), this should not happen, probably the framework could not handle mapping correctly based on your bean.
 ```
 
-## 4. Dependencies
+## 4. Initialization
+
+Sometimes the following exception will occur and program will never recover:
+```
+Caused by: com.baidu.unbiz.easymapper.exception.MappingException: No class map found for (String, String), make sure type or nested type is registered beforehand
+```
+This is because during program startup, their might be concurrent calls, and `easy-mapper` relies on `SPI Service Provider` which is not thread-safe,
+so it failed the first time and never recover. In the long run, `SPI Service Provider` will be replaced. But currently what you can do is the paste the following code
+in your startup.
+
+```
+ServiceLoaderHelper.getInstance();
+```
+
+For example, in Spring context startup.
+```
+public class CustomContextLoaderListener extends ContextLoaderListener {
+    static {
+        ServiceLoaderHelper.getInstance();
+    }
+}
+```
+
+## 5. Dependencies
 ```
 +- org.slf4j:slf4j-api:jar:1.7.7:compile
 +- org.slf4j:slf4j-log4j12:jar:1.7.7:compile
@@ -217,7 +240,7 @@ com.baidu.unbiz.easymapper.exception.MappingException: Generating mapping code f
 +- org.javassist:javassist:jar:3.18.1-GA:compile
 ```
 
-## 5. Benchmark
+## 6. Benchmark
 Based on Oracal Hotspot JVM:
 ```
 java version "1.8.0_51"
@@ -285,8 +308,8 @@ For Spring BeanUtils, when invocation number exceeds certain threshold, Spring B
 
 By thinking of the benefits that easy-mapper brings to you, this tradeoff can be accepted.
 
-## 6. Working together with High-order function
-### 6.1 With guava
+## 7. Working together with High-order function
+### 7.1 With guava
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
@@ -296,7 +319,7 @@ Collection<PersonDto> personDtoList = Collections2.transform(personList,
 System.out.println(personDtoList);
 ```
 
-### 6.2 With functional java
+### 7.2 With functional java
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
@@ -306,7 +329,7 @@ fj.data.List<PersonDto> personDtoList = fj.data.List.fromIterator(personList.ite
 personDtoList.forEach(e -> System.out.println(e));
 ```
 
-### 6.3 With Java8 stream
+### 7.3 With Java8 stream
 ```
 MapperFactory.getCopyByRefMapper().mapClass(Address.class, Address2.class).register();
 MapperFactory.getCopyByRefMapper().mapClass(Person.class, PersonDto.class).register();
@@ -316,7 +339,7 @@ List<PersonDto> personDtoList = personList.stream().map(p -> MapperFactory.getCo
 ```
 
 
-### 6.4 With Scala
+### 7.4 With Scala
 ```
 object EasyMapperTest {
  
@@ -333,5 +356,5 @@ object EasyMapperTest {
 }
 ```
 
-## 7. Acknowledgment
+## 8. Acknowledgment
 The development of easy-mapper is inspired by Orika. Easy-mapper with Apache2.0 Open Source License retains all copyright, trademark, author’s information from Orika.
