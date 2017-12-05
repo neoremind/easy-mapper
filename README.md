@@ -26,7 +26,7 @@ Maven:
 ```
 Gradle:
 ```
-compile 'com.baidu.unbiz:easy-mapper:1.0.2'
+compile 'com.baidu.unbiz:easy-mapper:1.0.3'
 ```
 
 ### 1.2 Develop Java bean
