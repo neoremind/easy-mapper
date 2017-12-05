@@ -216,7 +216,7 @@ Sometimes the following exception will occur and program will never recover:
 Caused by: com.baidu.unbiz.easymapper.exception.MappingException: No class map found for (String, String), make sure type or nested type is registered beforehand
 ```
 This is because during program startup, their might be concurrent calls, and `easy-mapper` relies on `SPI Service Provider` which is not thread-safe,
-so it failed the first time and never recover. In the long run, `SPI Service Provider` will be replaced. But currently what you can do is the paste the following code
+so it fails the first time and never recover. In the long run, `SPI Service Provider` will be replaced. But currently what you can do is to paste the following code
 in your startup.
 
 ```
