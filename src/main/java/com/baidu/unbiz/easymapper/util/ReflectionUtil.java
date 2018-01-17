@@ -28,12 +28,21 @@ public class ReflectionUtil {
         if (constructors == null || constructors.length == 0) {
             return null;
         }
+        int defaultConstructionMethod =1;
+        for(int i=0; i<constructors.length;i++){
+            if(constructors[i].getParameterTypes().length==0){
+                defaultConstructionMethod=i;
+                break;
+            }
+        }
 
-        Object[] initParameters = getInitParameters(constructors[0].getParameterTypes());
+
+
+        Object[] initParameters = getInitParameters(constructors[defaultConstructionMethod].getParameterTypes());
 
         try {
             @SuppressWarnings("unchecked")
-            T instance = (T) constructors[0].newInstance(initParameters);
+            T instance = (T) constructors[defaultConstructionMethod].newInstance(initParameters);
             return instance;
         } catch (Exception e) {
             LOGGER.error("newInstance", e);
