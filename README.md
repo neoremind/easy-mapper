@@ -21,12 +21,12 @@ Maven:
 <dependency>
     <groupId>com.baidu.unbiz</groupId>
     <artifactId>easy-mapper</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 Gradle:
 ```
-compile 'com.baidu.unbiz:easy-mapper:1.0.3'
+compile 'com.baidu.unbiz:easy-mapper:1.0.4'
 ```
 
 ### 1.2 Develop Java bean
