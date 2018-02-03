@@ -209,7 +209,7 @@ com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException: No appropri
 com.baidu.unbiz.easymapper.exception.MappingException: Generating mapping code failed for ClassMap([A]:Person6, [B]:PersonDto6), this should not happen, probably the framework could not handle mapping correctly based on your bean.
 ```
 
-Note that for target class, it is OK without non-args default constructor, but you have to 
+For target class creation, it is OK without non-args default constructor, but you have to 
 make sure every parameter should be primitive or else easy-mapper cannot create an instance of the target class.
 
 Easy-mapper prefers default constructor to create the target class when multiple constructors appearing.
