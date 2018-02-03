@@ -154,6 +154,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

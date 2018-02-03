@@ -198,7 +198,7 @@ Rules prioritizes as below:
 
 3.	If target field is String but source is not, assign target with source.toString().
 
-4.	If target field type can be assigned from source field type, then copy by reference.
+4.	If target field type can be assigned from source field type, then **copy by reference**.
 
 5.	Any other cases, use object graph or so called cascade mapping to map.
 
@@ -208,6 +208,11 @@ com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException: No appropri
 ...
 com.baidu.unbiz.easymapper.exception.MappingException: Generating mapping code failed for ClassMap([A]:Person6, [B]:PersonDto6), this should not happen, probably the framework could not handle mapping correctly based on your bean.
 ```
+
+Note that for target class, it is OK without non-args default constructor, but you have to 
+make sure every parameter should be primitive or else easy-mapper cannot create an instance of the target class.
+
+Easy-mapper prefers default constructor to create the target class when multiple constructors appearing.
 
 ## 4. Initialization
 

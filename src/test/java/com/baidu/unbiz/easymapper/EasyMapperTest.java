@@ -1,13 +1,13 @@
 package com.baidu.unbiz.easymapper;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
-import java.util.List;
-import java.util.Map;
-
-import com.baidu.unbiz.easymapper.exception.MappingCodeGenerationException;
+import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
+import com.baidu.unbiz.easymapper.exception.MappingException;
+import com.baidu.unbiz.easymapper.thrift.PojoQueryRequest;
+import com.baidu.unbiz.easymapper.thrift.QueryRequest;
+import com.baidu.unbiz.easymapper.transformer.Transformer;
 import com.baidu.unbiz.easymapper.vo.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -15,13 +15,15 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.baidu.unbiz.easymapper.codegen.AtoBMapping;
-import com.baidu.unbiz.easymapper.exception.MappingException;
-import com.baidu.unbiz.easymapper.transformer.Transformer;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
+ * Easy-mapper test suite
+ *
  * @author zhangxu
  */
 public class EasyMapperTest {
@@ -479,6 +481,38 @@ public class EasyMapperTest {
         assertThat(dto.jobTitles, Matchers.is(p.jobTitles));
         assertThat(dto.salary, Matchers.is(p.salary));
         assertThat(dto.myType, Matchers.is(MyEnumType.Mon));
+    }
+
+    @Test
+    public void testThrift2Pojo() {
+        QueryRequest req = new QueryRequest();
+        req.setId(123);
+        req.setName("haha");
+        req.setQuiet(false);
+        req.setOptList(Lists.newArrayList("jack", "neo"));
+        PojoQueryRequest pojoQueryRequest =
+                MapperFactory.getCopyByRefMapper().mapClass(QueryRequest.class, PojoQueryRequest.class).register()
+                        .map(req, PojoQueryRequest.class);
+        assertThat(pojoQueryRequest.getId(), Matchers.is(req.getId()));
+        assertThat(pojoQueryRequest.getName(), Matchers.is(req.getName()));
+        assertThat(pojoQueryRequest.isQuiet(), Matchers.is(req.isQuiet()));
+        assertThat(pojoQueryRequest.getOptList(), Matchers.is(req.getOptList()));
+    }
+
+    @Test
+    public void testPojo2Thrift() {
+        PojoQueryRequest pojoQueryRequest = new PojoQueryRequest();
+        pojoQueryRequest.setId(123);
+        pojoQueryRequest.setName("haha");
+        pojoQueryRequest.setQuiet(false);
+        pojoQueryRequest.setOptList(Lists.newArrayList("jack", "neo"));
+        QueryRequest queryRequest =
+                MapperFactory.getCopyByRefMapper().mapClass(PojoQueryRequest.class, QueryRequest.class).register()
+                        .map(pojoQueryRequest, QueryRequest.class);
+        assertThat(queryRequest.getId(), Matchers.is(pojoQueryRequest.getId()));
+        assertThat(queryRequest.getName(), Matchers.is(pojoQueryRequest.getName()));
+        assertThat(queryRequest.isQuiet(), Matchers.is(pojoQueryRequest.isQuiet()));
+        assertThat(queryRequest.getOptList(), Matchers.is(pojoQueryRequest.getOptList()));
     }
 
     @BeforeClass

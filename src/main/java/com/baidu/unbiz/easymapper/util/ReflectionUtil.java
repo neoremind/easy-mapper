@@ -3,6 +3,7 @@ package com.baidu.unbiz.easymapper.util;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 
+import com.baidu.unbiz.easymapper.exception.MappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,24 +21,34 @@ public class ReflectionUtil {
      *
      * @param clazz 类型
      * @param <T>   T
-     *
      * @return 对象
      */
     public static <T> T newInstance(final Class<T> clazz) {
         Constructor<?>[] constructors = getAllConstructorsOfClass(clazz, true);
         if (constructors == null || constructors.length == 0) {
-            return null;
+            throw new MappingException("No constructors found for class " + clazz.getName());
         }
 
-        Object[] initParameters = getInitParameters(constructors[0].getParameterTypes());
+        // we prefer to use constructor with 0 args, since if the constructor has one or more
+        // parameters, we are not sure whether it is primitive, and it will cause init failure
+        // if some parameters are null
+        int defaultConstructionMethod = 0;
+        for (int i = 0; i < constructors.length; i++) {
+            if (constructors[i].getParameterTypes().length == 0) {
+                defaultConstructionMethod = i;
+                break;
+            }
+        }
+
+        Object[] initParameters = getInitParameters(constructors[defaultConstructionMethod].getParameterTypes());
 
         try {
             @SuppressWarnings("unchecked")
-            T instance = (T) constructors[0].newInstance(initParameters);
+            T instance = (T) constructors[defaultConstructionMethod].newInstance(initParameters);
             return instance;
         } catch (Exception e) {
-            LOGGER.error("newInstance", e);
-            return null;
+            LOGGER.error("Create instance of class {} failed", clazz.getName(), e);
+            throw new MappingException("Create instance of class " + clazz.getName() + " failed due to " + e.getMessage());
         }
     }
 
@@ -46,7 +57,6 @@ public class ReflectionUtil {
      *
      * @param clazz      类型
      * @param accessible 是否可以访问
-     *
      * @return 构造方法数组
      */
     public static Constructor<?>[] getAllConstructorsOfClass(final Class<?> clazz, boolean accessible) {
@@ -66,7 +76,6 @@ public class ReflectionUtil {
      * 获取默认参数
      *
      * @param parameterTypes 参数类型数组
-     *
      * @return 参数值数组
      */
     private static Object[] getInitParameters(Class<?>[] parameterTypes) {
