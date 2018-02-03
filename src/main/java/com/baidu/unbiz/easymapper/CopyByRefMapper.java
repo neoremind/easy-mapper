@@ -152,11 +152,16 @@ public class CopyByRefMapper implements Mapper {
             }
             MapperKey key = new MapperKey(TypeFactory.valueOf(sourceObject.getClass()),
                     TypeFactory.valueOf(targetClass));
-            final ClassMap<A, B> classMap = (ClassMap<A, B>) classMapCache.get(key);
-            if (classMap == null) {
-                throw new MappingException(
-                        "No class map found for " + key + ", make sure type or nested type is registered beforehand");
+            ClassMap<A, B> tempClassMap = (ClassMap<A, B>) classMapCache.get(key);
+            if (tempClassMap == null) {
+                MapperFactory.getCopyByRefMapper().mapClass(sourceObject.getClass(), targetClass).register();
+                tempClassMap = (ClassMap<A, B>) classMapCache.get(key);
+                if (tempClassMap == null) {
+                    throw new MappingException(
+                            "No class map found for " + key + ", make sure type or nested type is registered beforehand");
+                }
             }
+            final ClassMap<A, B> classMap = tempClassMap;
             AtoBMapping<A, B> mapper =
                     (AtoBMapping<A, B>) mapperCache.compute(key,
                             new Computable<MapperKey, AtoBMapping<Object, Object>>() {
@@ -167,7 +172,7 @@ public class CopyByRefMapper implements Mapper {
                             });
             if (mapper == MappingCodeGenerator.ABSENT_MAPPING) {
                 mapperCache.remove(key);
-                throw new MappingException("Generating mapping code failed for " + classMap + ", this should not "
+                throw new MappingException("Generating mapping code failed for " + tempClassMap + ", this should not "
                         + "happen, probably the framework could not handle mapping correctly based on your bean");
             }
             if (b == null) {

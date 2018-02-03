@@ -515,6 +515,50 @@ public class EasyMapperTest {
         assertThat(queryRequest.getOptList(), Matchers.is(pojoQueryRequest.getOptList()));
     }
 
+    @Test
+    public void testSourceToDest() {
+        Source s = getSource();
+
+        Dest d = MapperFactory.getCopyByRefMapper().mapClass(Source.class, Dest.class).register()
+                .map(s, Dest.class);
+
+        assertThat(d.getV().getV1(), Matchers.is(s.getV().getV1()));
+        assertThat(d.getV().getV2().getV1(), Matchers.is(s.getV().getV2().getV1()));
+        assertThat(d.getV().getV2().getV2(), Matchers.is(s.getV().getV2().getV2()));
+    }
+
+    @Test
+    public void testSource1ToDest1WithMapperPredefined() {
+        Source s = getSource();
+
+        MapperFactory.getCopyByRefMapper().mapClass(InnerSource.class, InnerDest.class).customMapping((a, b) -> {
+            b.setV1("hello");
+            b.setV2(null);
+        }).register();
+
+        Dest dest1 = MapperFactory.getCopyByRefMapper().mapClass(Source.class, Dest.class).register()
+                .map(s, Dest.class);
+
+        assertThat(dest1.getV().getV1(), Matchers.not(s.getV().getV1()));
+        assertThat(dest1.getV().getV2(), Matchers.not(s.getV().getV2()));
+        assertThat(dest1.getV().getV1(), Matchers.is("hello"));
+        assertThat(dest1.getV().getV2(), Matchers.nullValue());
+    }
+
+    private Source getSource() {
+        InnerInnerSource iis = new InnerInnerSource();
+        iis.setV1("v1");
+        iis.setV2("v2");
+
+        InnerSource is = new InnerSource();
+        is.setV1("v1");
+        is.setV2(iis);
+
+        Source s = new Source();
+        s.setV(is);
+        return s;
+    }
+
     @BeforeClass
     public static void init() {
 //        System.setProperty(SystemPropertyUtil.ENABLE_WRITE_SOURCE_FILE, "true");
