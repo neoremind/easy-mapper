@@ -39,6 +39,15 @@ public class ReflectionUtil {
                 break;
             }
         }
+        int defaultConstructionMethod =1;
+        for(int i=0; i<constructors.length;i++){
+            if(constructors[i].getParameterTypes().length==0){
+                defaultConstructionMethod=i;
+                break;
+            }
+        }
+
+
 
         Object[] initParameters = getInitParameters(constructors[defaultConstructionMethod].getParameterTypes());
 
